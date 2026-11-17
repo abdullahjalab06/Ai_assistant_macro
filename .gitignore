@@ -1,0 +1,22 @@
+# Secrets
+.env
+.env.*
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+venv/
+.venv/
+
+# ChromaDB
+chroma_data/
+chroma_db/
+
+# IDE
+.vscode/
+
+# Temporary audio
+output.mp3
+temp.wav
