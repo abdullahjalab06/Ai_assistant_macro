@@ -20,3 +20,4 @@ pgvector
 moonshine-voice
 edge_tts
  elevenlabs
+pygame
