@@ -1,20 +1,28 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
-from llm import ask_ai
-from stt import Speech_to_text
+import tempfile
+import os
 
+from fastapi import FastAPI, UploadFile, File
+from llm import ask_ai
+from stt import transcribe_file
 
 app = FastAPI()
 
 
-
 @app.post("/ask")
-def ask_question(question):
-    question = Speech_to_text()
-    answer = ask_ai(question, 4)
+def ask_question(audio: UploadFile = File(...)):
 
-    return {
-        "question" : question,
-        "answer": answer
+    with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as temp_audio:
+        temp_audio.write(audio.file.read())
+        temp_audio_path = temp_audio.name
 
-    }
+    try:
+        question = transcribe_file(temp_audio_path)
+        answer = ask_ai(question, 4)
+
+        return {
+            "question": question,
+            "answer": answer
+        }
+
+    finally:
+        os.remove(temp_audio_path)
